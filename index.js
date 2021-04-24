@@ -1,0 +1,46 @@
+const express = require('express');
+const cors = require('cors')
+require('dotenv').config();
+const path = require('path');
+
+const { dbConnection } = require('./database/config')
+
+
+// CREAR SERVIDOR EXPRESS
+const app = express();
+
+// CORS
+app.use(cors());
+
+// LECTURA Y  PARSEO DEL BODY
+app.use(express.json())
+
+// BASE DE DATOS
+dbConnection();
+
+// DIRECTORIO PUBLICO
+//app.use(express.static('public'));
+
+//RUTAS
+app.use('/api/empleado', require('./routes/empleados'));
+app.use('/api/cliente', require('./routes/clientes'));
+app.use('/api/producto', require('./routes/productos'));
+app.use('/api/factura', require('./routes/facturas'));
+app.use('/api/detalle', require('./routes/detalles'));
+
+
+// app.use('/api/usuario', require('./routes/usuarios'));
+// app.use('/api/login', require('./routes/auth'));
+// app.use('/api/hospital', require('./routes/hospitales'));
+// app.use('/api/medico', require('./routes/medicos'));
+// app.use('/api/todo', require('./routes/busquedas'));
+// app.use('/api/upload', require('./routes/upload'));
+
+//LO ULTIMO
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
+
+app.listen(process.env.PORT, () => {
+    console.log('Servidor corriendo en el puerto: ' + process.env.PORT);
+});
